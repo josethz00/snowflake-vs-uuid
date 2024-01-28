@@ -28,6 +28,8 @@ func main() {
 
 	var wg sync.WaitGroup
 	numGoroutines := runtime.GOMAXPROCS(0) // Limit the number of goroutines to the number of CPU cores
+	// by passing 0 to GOMAXPROCS we get the number of cores available and doesn't limit
+	// the number of goroutines to a lower number
 	wg.Add(numGoroutines)
 
 	// UUID
@@ -35,9 +37,13 @@ func main() {
 	startTime := time.Now()
 
 	for i := 0; i < numGoroutines; i++ {
+		// Launch a goroutine for each CPU core
 		go func(wg *sync.WaitGroup) {
 			defer wg.Done()
-			for j := 0; j < 1000/numGoroutines; j++ {
+			// split the number of IDs to generate between the number of goroutines
+			// for example, if we want to generate 1000 IDs and we have 4 goroutines,
+			// each goroutine will generate 250 IDs
+			for j := 0; j < numIds/numGoroutines; j++ {
 				utils.GenUUID()
 			}
 		}(&wg)
@@ -54,7 +60,7 @@ func main() {
 	for i := 0; i < numGoroutines; i++ {
 		go func(wg *sync.WaitGroup) {
 			defer wg.Done()
-			for j := 0; j < 1000/numGoroutines; j++ {
+			for j := 0; j < numIds/numGoroutines; j++ {
 				utils.GenSnowflake(snowflakeNode)
 			}
 		}(&wg)
