@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:latest
+    restart: always
+    container_name: postgres-benchmark
+    ports:
+      - '5571:5432'
+    environment:
+      POSTGRES_USER: postgres-benchmark
+      POSTGRES_PASSWORD: postgres-benchmark
+      POSTGRES_DB: postgres-benchmark
+    volumes:
+      - ./initdb.sql:/docker-entrypoint-initdb.d/scripts.sql
+networks:
+  user-network:
+    driver: bridge
+  proxynet:
+    name: custom_network

@@ -23,6 +23,7 @@ func main() {
 	var numIds int
 	boldPurple.Print("How many IDs do you want to generate?   ")
 	fmt.Scanln(&numIds)
+	fmt.Print("\n")
 
 	boldCyan := color.New(color.FgHiCyan, color.Bold)
 
@@ -33,7 +34,6 @@ func main() {
 	wg.Add(numGoroutines)
 
 	// UUID
-	boldCyan.Printf("Generating %d UUIDs... \n", numIds)
 	startTime := time.Now()
 
 	for i := 0; i < numGoroutines; i++ {
