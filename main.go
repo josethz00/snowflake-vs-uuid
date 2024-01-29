@@ -125,4 +125,46 @@ func main() {
 
 	yellow.Print("--------------------------------------------------------------------")
 	fmt.Println()
+
+	// Select UUIDs from DB
+	boldCyan.Printf("Selecting %d UUIDs from the DB... \n", numIds)
+	wg.Add(numGoroutines)
+	startTime = time.Now()
+
+	for i := 0; i < numGoroutines; i++ {
+		go func(wg *sync.WaitGroup) {
+			defer wg.Done()
+			for j := 0; j < numIds/numGoroutines; j++ {
+				db.SelectIdFromTestsUUID()
+			}
+		}(&wg)
+	}
+
+	wg.Wait()
+	elapsedTime = time.Since(startTime)
+	boldCyan.Println("Elapsed time for UUIDs selection:", elapsedTime)
+
+	yellow.Print("--------------------------------------------------------------------")
+	fmt.Println()
+
+	// Select Snowflakes from DB
+	boldCyan.Printf("Selecting %d Snowflakes from the DB... \n", numIds)
+	wg.Add(numGoroutines)
+	startTime = time.Now()
+
+	for i := 0; i < numGoroutines; i++ {
+		go func(wg *sync.WaitGroup) {
+			defer wg.Done()
+			for j := 0; j < numIds/numGoroutines; j++ {
+				db.SelectIdFromTestsSnowflake()
+			}
+		}(&wg)
+	}
+
+	wg.Wait()
+	elapsedTime = time.Since(startTime)
+	boldCyan.Println("Elapsed time for Snowflakes selection:", elapsedTime)
+
+	yellow.Print("--------------------------------------------------------------------")
+	fmt.Println()
 }
