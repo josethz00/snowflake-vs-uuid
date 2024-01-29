@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
 	"runtime"
 	"sync"
 	"time"
@@ -12,6 +13,7 @@ import (
 )
 
 func main() {
+	rand.Seed(time.Now().Unix())
 	boldPurple := color.New(color.FgHiMagenta, color.Bold)
 	yellow := color.New(color.FgHiYellow)
 	boldPurple.Println("BENCHMARK: Snowflake vs UUID")
@@ -128,19 +130,14 @@ func main() {
 
 	// Select UUIDs from DB
 	boldCyan.Printf("Selecting %d UUIDs from the DB... \n", numIds)
-	wg.Add(numGoroutines)
 	startTime = time.Now()
 
-	for i := 0; i < numGoroutines; i++ {
-		go func(wg *sync.WaitGroup) {
-			defer wg.Done()
-			for j := 0; j < numIds/numGoroutines; j++ {
-				db.SelectIdFromTestsUUID()
-			}
-		}(&wg)
+	uuidres, err := db.SelectIdFromTestsUUID()
+
+	if err != nil {
+		panic(err)
 	}
 
-	wg.Wait()
 	elapsedTime = time.Since(startTime)
 	boldCyan.Println("Elapsed time for UUIDs selection:", elapsedTime)
 
@@ -149,22 +146,49 @@ func main() {
 
 	// Select Snowflakes from DB
 	boldCyan.Printf("Selecting %d Snowflakes from the DB... \n", numIds)
-	wg.Add(numGoroutines)
 	startTime = time.Now()
 
-	for i := 0; i < numGoroutines; i++ {
-		go func(wg *sync.WaitGroup) {
-			defer wg.Done()
-			for j := 0; j < numIds/numGoroutines; j++ {
-				db.SelectIdFromTestsSnowflake()
-			}
-		}(&wg)
+	snowflakeres, err := db.SelectIdFromTestsSnowflake()
+
+	if err != nil {
+		panic(err)
 	}
 
-	wg.Wait()
 	elapsedTime = time.Since(startTime)
 	boldCyan.Println("Elapsed time for Snowflakes selection:", elapsedTime)
 
 	yellow.Print("--------------------------------------------------------------------")
 	fmt.Println()
+
+	// Search By UUID
+	boldCyan.Printf("Searching by a unique UUID... \n")
+	randomUuidFromResults := uuidres[rand.Intn(len(uuidres))]
+	startTime = time.Now()
+
+	_, err = db.SearchByUUID(randomUuidFromResults)
+
+	if err != nil {
+		panic(err)
+	}
+
+	elapsedTime = time.Since(startTime)
+	boldCyan.Println("Elapsed time for UUID search:", elapsedTime)
+
+	yellow.Print("--------------------------------------------------------------------")
+	fmt.Println()
+
+	// Search By Snowflake
+	boldCyan.Printf("Searching by a unique Snowflake... \n")
+	// pick a random snowflake from the results array
+	randomSnowflakeFromResults := snowflakeres[rand.Intn(len(snowflakeres))]
+	startTime = time.Now()
+
+	_, err = db.SearchBySnowflake(randomSnowflakeFromResults)
+
+	if err != nil {
+		panic(err)
+	}
+
+	elapsedTime = time.Since(startTime)
+	boldCyan.Println("Elapsed time for Snowflake search:", elapsedTime)
 }
