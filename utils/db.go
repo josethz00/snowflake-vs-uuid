@@ -141,3 +141,19 @@ func (db *DB) OrderedSelectIdFromTestsUUID() ([]string, error) {
 
 	return results, nil
 }
+
+func (db *DB) UpdateTestsUUID(id string, name string) error {
+	_, err := db.Exec("UPDATE tests_uuid SET name = $1 WHERE id = $2", name, id)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (db *DB) UpdateTestsSnowflake(id int64, name string) error {
+	_, err := db.Exec("UPDATE tests_snowflake SET name = $1 WHERE id = $2", name, id)
+	if err != nil {
+		return err
+	}
+	return nil
+}
