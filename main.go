@@ -11,24 +11,13 @@ import (
 	"github.com/josethz00/snowflake-vs-uuid/utils"
 )
 
-type TestsUUID struct {
-	id         string
-	name       string
-	created_at time.Time
-	updated_at time.Time
-}
-
-type TestsSnowflake struct {
-	id         int64
-	name       string
-	created_at time.Time
-	updated_at time.Time
-}
-
 func main() {
 	boldPurple := color.New(color.FgHiMagenta, color.Bold)
+	yellow := color.New(color.FgHiYellow)
 	boldPurple.Println("BENCHMARK: Snowflake vs UUID")
 	db := utils.NewDB().ConnectDB()
+	defer db.TruncateTestsSnowflakeTable()
+	defer db.TruncateTestsUUIDTable()
 
 	snowflakeNode, err := snowflake.NewNode(1)
 	if err != nil {
@@ -47,6 +36,8 @@ func main() {
 	// by passing 0 to GOMAXPROCS we get the number of cores available and doesn't limit
 	// the number of goroutines to a lower number
 	wg.Add(numGoroutines)
+
+	boldCyan.Printf("Generating %d UUIDs\n", numIds)
 
 	// UUID
 	startTime := time.Now()
@@ -68,6 +59,9 @@ func main() {
 	elapsedTime := time.Since(startTime)
 	boldCyan.Println("Elapsed time for UUIDs:", elapsedTime)
 
+	yellow.Print("--------------------------------------------------------------------")
+	fmt.Println()
+
 	boldCyan.Printf("Generating %d Snowflakes... \n", numIds)
 	wg.Add(numGoroutines)
 	startTime = time.Now()
@@ -84,6 +78,9 @@ func main() {
 	wg.Wait()
 	elapsedTime = time.Since(startTime)
 	boldCyan.Println("Elapsed time for Snowflakes:", elapsedTime)
+
+	yellow.Print("--------------------------------------------------------------------")
+	fmt.Println()
 
 	// Insert UUIDs into DB
 	boldCyan.Printf("Generating %d UUIDs and inserting them into the DB... \n", numIds)
@@ -104,6 +101,9 @@ func main() {
 	elapsedTime = time.Since(startTime)
 	boldCyan.Println("Elapsed time for UUIDs insertion:", elapsedTime)
 
+	yellow.Print("--------------------------------------------------------------------")
+	fmt.Println()
+
 	// Insert Snowflakes into DB
 	boldCyan.Printf("Generating %d Snowflakes and inserting them into the DB... \n", numIds)
 	wg.Add(numGoroutines)
@@ -123,4 +123,6 @@ func main() {
 	elapsedTime = time.Since(startTime)
 	boldCyan.Println("Elapsed time for Snowflakes insertion:", elapsedTime)
 
+	yellow.Print("--------------------------------------------------------------------")
+	fmt.Println()
 }
