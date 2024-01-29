@@ -1,12 +1,28 @@
 package utils
 
 import (
+	"time"
+
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 )
 
 type DB struct {
 	*sqlx.DB
+}
+
+type TestsUUID struct {
+	id         string
+	name       string
+	created_at time.Time
+	updated_at time.Time
+}
+
+type TestsSnowflake struct {
+	id         int64
+	name       string
+	created_at time.Time
+	updated_at time.Time
 }
 
 func NewDB() *DB {
@@ -53,4 +69,26 @@ func (db *DB) TruncateTestsUUIDTable() error {
 		return err
 	}
 	return nil
+}
+
+func (db *DB) SelectIdFromTestsSnowflake() ([]TestsSnowflake, error) {
+	results := []TestsSnowflake{}
+	err := db.Select(&results, "SELECT id FROM tests_snowflake")
+
+	if err != nil {
+		return nil, err
+	}
+
+	return results, nil
+}
+
+func (db *DB) SelectIdFromTestsUUID() ([]TestsUUID, error) {
+	results := []TestsUUID{}
+	err := db.Select(&results, "SELECT id FROM tests_uuid")
+
+	if err != nil {
+		return nil, err
+	}
+
+	return results, nil
 }
