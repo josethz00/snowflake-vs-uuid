@@ -13,17 +13,15 @@ commands_means = {
 
 colors = plt.cm.get_cmap('tab20').colors
 
-fig, axes = plt.subplots(nrows=2, ncols=3, figsize=(12, 6), constrained_layout=True)
+fig, axes = plt.subplots(nrows=2, ncols=3, figsize=(12, 6), dpi=100)
+plt.subplots_adjust(wspace=0.4, hspace=0.4)  # Add space between subplots
 axes = axes.flatten()  # Convert 2D array of subplots to 1D
 
 for i, (attribute, measurement) in enumerate(commands_means.items()):
     ax = axes[i]
     y_max = max(measurement) * 1.1
 
-    if attribute == 'INSERT':
-        ax.set_ylim(0, y_max)  # Adjust limit for INSERT
-    else:
-        ax.set_ylim(0, y_max)  # Set common limit for other commands
+    ax.set_ylim(0, y_max)
 
     rects = ax.bar(categories, measurement, color=colors[:2])
     ax.bar_label(rects, padding=3)
