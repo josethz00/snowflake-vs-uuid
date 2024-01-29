@@ -191,4 +191,36 @@ func main() {
 
 	elapsedTime = time.Since(startTime)
 	boldCyan.Println("Elapsed time for Snowflake search:", elapsedTime)
+
+	yellow.Print("--------------------------------------------------------------------")
+	fmt.Println()
+
+	// Select from tests_uuid order by
+	boldCyan.Printf("Selecting UUIDs from the DB ordered by id... \n")
+	startTime = time.Now()
+
+	_, err = db.OrderedSelectIdFromTestsUUID()
+
+	if err != nil {
+		panic(err)
+	}
+
+	elapsedTime = time.Since(startTime)
+	boldCyan.Println("Elapsed time for UUIDs ordered selection:", elapsedTime)
+
+	yellow.Print("--------------------------------------------------------------------")
+	fmt.Println()
+
+	// Select from tests_snowflake order by
+	boldCyan.Printf("Selecting Snowflakes from the DB ordered by id... \n")
+	startTime = time.Now()
+
+	_, err = db.OrderedSelectIdFromTestsSnowflake()
+
+	if err != nil {
+		panic(err)
+	}
+
+	elapsedTime = time.Since(startTime)
+	boldCyan.Println("Elapsed time for Snowflakes ordered selection:", elapsedTime)
 }
