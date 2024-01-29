@@ -2,6 +2,7 @@ package utils
 
 import (
 	"github.com/jmoiron/sqlx"
+	_ "github.com/lib/pq"
 )
 
 type DB struct {
@@ -32,6 +33,22 @@ func (db *DB) InsertIntoTestsUUID(id string, name string) error {
 
 func (db *DB) InsertIntoTestsSnowflake(id int64, name string) error {
 	_, err := db.Exec("INSERT INTO tests_snowflake(id, name) VALUES ($1, $2)", id, name)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (db *DB) TruncateTestsSnowflakeTable() error {
+	_, err := db.Exec("TRUNCATE TABLE tests_snowflake")
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (db *DB) TruncateTestsUUIDTable() error {
+	_, err := db.Exec("TRUNCATE TABLE tests_uuid")
 	if err != nil {
 		return err
 	}
