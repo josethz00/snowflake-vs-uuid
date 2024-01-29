@@ -223,4 +223,54 @@ func main() {
 
 	elapsedTime = time.Since(startTime)
 	boldCyan.Println("Elapsed time for Snowflakes ordered selection:", elapsedTime)
+
+	yellow.Print("--------------------------------------------------------------------")
+	fmt.Println()
+
+	boldCyan.Printf("Selecting UUIDs from the DB ordered by id... \n")
+	startTime = time.Now()
+
+	_, err = db.OrderedSelectIdFromTestsUUID()
+
+	if err != nil {
+		panic(err)
+	}
+
+	elapsedTime = time.Since(startTime)
+	boldCyan.Println("Elapsed time for UUIDs ordered selection:", elapsedTime)
+
+	yellow.Print("--------------------------------------------------------------------")
+	fmt.Println()
+
+	// Update record in tests_uuid
+	boldCyan.Printf("Updating a record in tests_uuid... \n")
+	startTime = time.Now()
+
+	err = db.UpdateTestsUUID(randomUuidFromResults, "test2")
+
+	if err != nil {
+		panic(err)
+	}
+
+	elapsedTime = time.Since(startTime)
+	boldCyan.Println("Elapsed time for Snowflakes ordered selection:", elapsedTime)
+
+	yellow.Print("--------------------------------------------------------------------")
+	fmt.Println()
+
+	// Update record in tests_snowflake
+	boldCyan.Printf("Updating a record in tests_snowflake... \n")
+	startTime = time.Now()
+
+	err = db.UpdateTestsSnowflake(randomSnowflakeFromResults, "test2")
+
+	if err != nil {
+		panic(err)
+	}
+
+	elapsedTime = time.Since(startTime)
+	boldCyan.Println("Elapsed time for Snowflakes ordered selection:", elapsedTime)
+
+	yellow.Print("--------------------------------------------------------------------")
+	fmt.Println()
 }
