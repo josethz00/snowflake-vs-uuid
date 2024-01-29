@@ -12,17 +12,17 @@ type DB struct {
 }
 
 type TestsUUID struct {
-	id         string
-	name       string
-	created_at time.Time
-	updated_at time.Time
+	ID        string    `db:"id"`
+	Name      string    `db:"name"`
+	CreatedAt time.Time `db:"created_at"`
+	UpdatedAt time.Time `db:"updated_at"`
 }
 
 type TestsSnowflake struct {
-	id         int64
-	name       string
-	created_at time.Time
-	updated_at time.Time
+	ID        int64     `db:"id"`
+	Name      string    `db:"name"`
+	CreatedAt time.Time `db:"created_at"`
+	UpdatedAt time.Time `db:"updated_at"`
 }
 
 func NewDB() *DB {
@@ -71,8 +71,8 @@ func (db *DB) TruncateTestsUUIDTable() error {
 	return nil
 }
 
-func (db *DB) SelectIdFromTestsSnowflake() ([]TestsSnowflake, error) {
-	results := []TestsSnowflake{}
+func (db *DB) SelectIdFromTestsSnowflake() ([]int64, error) {
+	results := []int64{}
 	err := db.Select(&results, "SELECT id FROM tests_snowflake")
 
 	if err != nil {
@@ -82,12 +82,37 @@ func (db *DB) SelectIdFromTestsSnowflake() ([]TestsSnowflake, error) {
 	return results, nil
 }
 
-func (db *DB) SelectIdFromTestsUUID() ([]TestsUUID, error) {
-	results := []TestsUUID{}
+func (db *DB) SelectIdFromTestsUUID() ([]string, error) {
+	results := []string{}
+
 	err := db.Select(&results, "SELECT id FROM tests_uuid")
 
 	if err != nil {
 		return nil, err
+	}
+
+	return results, nil
+}
+
+func (db *DB) SearchBySnowflake(snowflakeId int64) (TestsSnowflake, error) {
+	results := TestsSnowflake{}
+
+	err := db.Get(&results, "SELECT * FROM tests_snowflake WHERE id = $1", snowflakeId)
+
+	if err != nil {
+		return TestsSnowflake{}, err
+	}
+
+	return results, nil
+}
+
+func (db *DB) SearchByUUID(uuid_ string) (TestsUUID, error) {
+	results := TestsUUID{}
+
+	err := db.Get(&results, "SELECT * FROM tests_uuid WHERE id = $1", uuid_)
+
+	if err != nil {
+		return TestsUUID{}, err
 	}
 
 	return results, nil
