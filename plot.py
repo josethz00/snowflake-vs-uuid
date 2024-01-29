@@ -11,7 +11,7 @@ commands_means = {
     'UPDATE': (0.00603118, 0.00179332),
 }
 
-colors = plt.cm.get_cmap('tab20').colors
+colors = plt.cm.get_cmap('tab10').colors
 
 fig, axes = plt.subplots(nrows=2, ncols=3, figsize=(12, 6), dpi=100)
 plt.subplots_adjust(wspace=0.4, hspace=0.4)  # Add space between subplots
