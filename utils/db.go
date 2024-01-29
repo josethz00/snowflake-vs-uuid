@@ -117,3 +117,27 @@ func (db *DB) SearchByUUID(uuid_ string) (TestsUUID, error) {
 
 	return results, nil
 }
+
+func (db *DB) OrderedSelectIdFromTestsSnowflake() ([]int64, error) {
+	results := []int64{}
+
+	err := db.Select(&results, "SELECT id FROM tests_snowflake ORDER BY id ASC")
+
+	if err != nil {
+		return nil, err
+	}
+
+	return results, nil
+}
+
+func (db *DB) OrderedSelectIdFromTestsUUID() ([]string, error) {
+	results := []string{}
+
+	err := db.Select(&results, "SELECT id FROM tests_uuid ORDER BY id ASC")
+
+	if err != nil {
+		return nil, err
+	}
+
+	return results, nil
+}
