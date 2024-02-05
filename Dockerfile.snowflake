@@ -4,11 +4,15 @@ WORKDIR /app
 
 COPY . .
 
-COPY snowflakebenchmark /app/
-
 RUN go mod download
 
-RUN go build -o snowflakebenchmark main.go
+RUN go build -o snowflakebenchmark.out ./snowflakebenchmark/main.go
+
+RUN chmod +x snowflakebenchmark.out
+
+# Create a non-root user and switch to it
+RUN useradd -m myuser
+USER myuser
 
 # Start a shell to keep the container running, instead of executing the benchmark immediately
 CMD [ "sh" ]
