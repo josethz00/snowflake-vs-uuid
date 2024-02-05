@@ -4,11 +4,9 @@ WORKDIR /app
 
 COPY . .
 
-COPY uuidbenchmark /app/
-
 RUN go mod download
 
-RUN go build -o uuidbenchmark main.go
+RUN go build -o snowflakebenchmark snowflakebenchmark/main.go
 
 # Start a shell to keep the container running, instead of executing the benchmark immediately
 CMD [ "sh" ]
