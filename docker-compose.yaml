@@ -25,14 +25,12 @@ services:
       - db
     networks:
       - custom_network
-    # Override the default CMD to keep the container running
-    command: tail -f /dev/null
-    # CPU and Memory limits
     deploy:
       resources:
         limits:
           cpus: '2'
           memory: 4G
+    command: tail -f /dev/null
 
   snowflake_benchmark:
     build:
@@ -43,14 +41,12 @@ services:
       - db
     networks:
       - custom_network
-    # Override the default CMD to keep the container running
-    command: tail -f /dev/null
-    # CPU and Memory limits
     deploy:
       resources:
         limits:
           cpus: '2'
           memory: 4G
+    command: tail -f /dev/null
 
 networks:
   custom_network:
