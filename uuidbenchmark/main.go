@@ -56,6 +56,7 @@ func main() {
 
 	wg.Wait()
 	elapsedTime := time.Since(startTime)
+	uuidBenchmarkResults["Generation"] = elapsedTime
 	boldCyan.Println("Elapsed time for UUIDs:", elapsedTime)
 
 	yellow.Print("--------------------------------------------------------------------")
@@ -78,6 +79,7 @@ func main() {
 
 	wg.Wait()
 	elapsedTime = time.Since(startTime)
+	uuidBenchmarkResults["Generation + Insertion"] = elapsedTime
 	boldCyan.Println("Elapsed time for UUIDs insertion:", elapsedTime)
 
 	yellow.Print("--------------------------------------------------------------------")
@@ -94,6 +96,7 @@ func main() {
 	}
 
 	elapsedTime = time.Since(startTime)
+	uuidBenchmarkResults["Selection"] = elapsedTime
 	boldCyan.Println("Elapsed time for UUIDs selection:", elapsedTime)
 
 	yellow.Print("--------------------------------------------------------------------")
@@ -111,6 +114,7 @@ func main() {
 	}
 
 	elapsedTime = time.Since(startTime)
+	uuidBenchmarkResults["Search"] = elapsedTime
 	boldCyan.Println("Elapsed time for UUID search:", elapsedTime)
 
 	yellow.Print("--------------------------------------------------------------------")
@@ -127,6 +131,7 @@ func main() {
 	}
 
 	elapsedTime = time.Since(startTime)
+	uuidBenchmarkResults["Ordered Selection"] = elapsedTime
 	boldCyan.Println("Elapsed time for UUIDs ordered selection:", elapsedTime)
 
 	yellow.Print("--------------------------------------------------------------------")
@@ -143,6 +148,7 @@ func main() {
 	}
 
 	elapsedTime = time.Since(startTime)
+	uuidBenchmarkResults["Update"] = elapsedTime
 	boldCyan.Println("Elapsed time for UUID update:", elapsedTime)
 
 	reportsDir := filepath.Join(".", "reports", "uuidbenchmark")
