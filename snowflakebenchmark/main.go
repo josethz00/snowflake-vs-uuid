@@ -16,10 +16,9 @@ func main() {
 	rand.Seed(42) // fixed seed to reduce variability
 	boldPurple := color.New(color.FgHiMagenta, color.Bold)
 	yellow := color.New(color.FgHiYellow)
-	boldPurple.Println("BENCHMARK: Snowflake vs UUID")
+	boldPurple.Println("BENCHMARK: Snowflake")
 	db := utils.NewDB().ConnectDB()
 	defer db.TruncateTestsSnowflakeTable()
-	defer db.TruncateTestsUUIDTable()
 
 	snowflakeNode, err := snowflake.NewNode(1)
 	if err != nil {
@@ -37,36 +36,10 @@ func main() {
 	numGoroutines := runtime.GOMAXPROCS(0) // Limit the number of goroutines to the number of CPU cores
 	// by passing 0 to GOMAXPROCS we get the number of cores available and doesn't limit
 	// the number of goroutines to a lower number
-	wg.Add(numGoroutines)
-
-	boldCyan.Printf("Generating %d UUIDs\n", numIds)
-
-	// UUID
-	startTime := time.Now()
-
-	for i := 0; i < numGoroutines; i++ {
-		// Launch a goroutine for each CPU core
-		go func(wg *sync.WaitGroup) {
-			defer wg.Done()
-			// split the number of IDs to generate between the number of goroutines
-			// for example, if we want to generate 1000 IDs and we have 4 goroutines,
-			// each goroutine will generate 250 IDs
-			for j := 0; j < numIds/numGoroutines; j++ {
-				utils.GenUUID()
-			}
-		}(&wg)
-	}
-
-	wg.Wait()
-	elapsedTime := time.Since(startTime)
-	boldCyan.Println("Elapsed time for UUIDs:", elapsedTime)
-
-	yellow.Print("--------------------------------------------------------------------")
-	fmt.Println()
 
 	boldCyan.Printf("Generating %d Snowflakes... \n", numIds)
 	wg.Add(numGoroutines)
-	startTime = time.Now()
+	startTime := time.Now()
 
 	for i := 0; i < numGoroutines; i++ {
 		go func(wg *sync.WaitGroup) {
@@ -78,30 +51,8 @@ func main() {
 	}
 
 	wg.Wait()
-	elapsedTime = time.Since(startTime)
+	elapsedTime := time.Since(startTime)
 	boldCyan.Println("Elapsed time for Snowflakes:", elapsedTime)
-
-	yellow.Print("--------------------------------------------------------------------")
-	fmt.Println()
-
-	// Insert UUIDs into DB
-	boldCyan.Printf("Generating %d UUIDs and inserting them into the DB... \n", numIds)
-	wg.Add(numGoroutines)
-	startTime = time.Now()
-
-	for i := 0; i < numGoroutines; i++ {
-		go func(wg *sync.WaitGroup) {
-			defer wg.Done()
-			for j := 0; j < numIds/numGoroutines; j++ {
-				uuid := utils.GenUUID()
-				db.InsertIntoTestsUUID(uuid, "test")
-			}
-		}(&wg)
-	}
-
-	wg.Wait()
-	elapsedTime = time.Since(startTime)
-	boldCyan.Println("Elapsed time for UUIDs insertion:", elapsedTime)
 
 	yellow.Print("--------------------------------------------------------------------")
 	fmt.Println()
@@ -128,22 +79,6 @@ func main() {
 	yellow.Print("--------------------------------------------------------------------")
 	fmt.Println()
 
-	// Select UUIDs from DB
-	boldCyan.Printf("Selecting %d UUIDs from the DB... \n", numIds)
-	startTime = time.Now()
-
-	uuidres, err := db.SelectIdFromTestsUUID()
-
-	if err != nil {
-		panic(err)
-	}
-
-	elapsedTime = time.Since(startTime)
-	boldCyan.Println("Elapsed time for UUIDs selection:", elapsedTime)
-
-	yellow.Print("--------------------------------------------------------------------")
-	fmt.Println()
-
 	// Select Snowflakes from DB
 	boldCyan.Printf("Selecting %d Snowflakes from the DB... \n", numIds)
 	startTime = time.Now()
@@ -156,23 +91,6 @@ func main() {
 
 	elapsedTime = time.Since(startTime)
 	boldCyan.Println("Elapsed time for Snowflakes selection:", elapsedTime)
-
-	yellow.Print("--------------------------------------------------------------------")
-	fmt.Println()
-
-	// Search By UUID
-	boldCyan.Printf("Searching by a unique UUID... \n")
-	randomUuidFromResults := uuidres[rand.Intn(len(uuidres))]
-	startTime = time.Now()
-
-	_, err = db.SearchByUUID(randomUuidFromResults)
-
-	if err != nil {
-		panic(err)
-	}
-
-	elapsedTime = time.Since(startTime)
-	boldCyan.Println("Elapsed time for UUID search:", elapsedTime)
 
 	yellow.Print("--------------------------------------------------------------------")
 	fmt.Println()
@@ -195,58 +113,11 @@ func main() {
 	yellow.Print("--------------------------------------------------------------------")
 	fmt.Println()
 
-	// Select from tests_uuid order by
-	boldCyan.Printf("Selecting UUIDs from the DB ordered by id... \n")
-	startTime = time.Now()
-
-	_, err = db.OrderedSelectIdFromTestsUUID()
-
-	if err != nil {
-		panic(err)
-	}
-
-	elapsedTime = time.Since(startTime)
-	boldCyan.Println("Elapsed time for UUIDs ordered selection:", elapsedTime)
-
-	yellow.Print("--------------------------------------------------------------------")
-	fmt.Println()
-
 	// Select from tests_snowflake order by
 	boldCyan.Printf("Selecting Snowflakes from the DB ordered by id... \n")
 	startTime = time.Now()
 
 	_, err = db.OrderedSelectIdFromTestsSnowflake()
-
-	if err != nil {
-		panic(err)
-	}
-
-	elapsedTime = time.Since(startTime)
-	boldCyan.Println("Elapsed time for Snowflakes ordered selection:", elapsedTime)
-
-	yellow.Print("--------------------------------------------------------------------")
-	fmt.Println()
-
-	boldCyan.Printf("Selecting UUIDs from the DB ordered by id... \n")
-	startTime = time.Now()
-
-	_, err = db.OrderedSelectIdFromTestsUUID()
-
-	if err != nil {
-		panic(err)
-	}
-
-	elapsedTime = time.Since(startTime)
-	boldCyan.Println("Elapsed time for UUIDs ordered selection:", elapsedTime)
-
-	yellow.Print("--------------------------------------------------------------------")
-	fmt.Println()
-
-	// Update record in tests_uuid
-	boldCyan.Printf("Updating a record in tests_uuid... \n")
-	startTime = time.Now()
-
-	err = db.UpdateTestsUUID(randomUuidFromResults, "test2")
 
 	if err != nil {
 		panic(err)
