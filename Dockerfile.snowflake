@@ -12,6 +12,10 @@ RUN chmod +x snowflakebenchmark.out
 
 # Create a non-root user and switch to it
 RUN useradd -m myuser
+
+RUN mkdir -p /app/reports/snowflakebenchmark && \
+    chown -R myuser:myuser /app /app/reports /app/reports/snowflakebenchmark
+
 USER myuser
 
 # Start a shell to keep the container running, instead of executing the benchmark immediately
