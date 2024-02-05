@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"math/rand"
+	"os"
+	"path/filepath"
 	"runtime"
 	"sync"
 	"time"
@@ -17,6 +19,8 @@ func main() {
 	yellow := color.New(color.FgHiYellow)
 	boldPurple.Println("BENCHMARK: UUID")
 	db := utils.NewDB().ConnectDB()
+	uuidBenchmarkResults := make(map[string]time.Duration)
+
 	defer db.TruncateTestsUUIDTable()
 
 	var numIds int
@@ -140,6 +144,33 @@ func main() {
 
 	elapsedTime = time.Since(startTime)
 	boldCyan.Println("Elapsed time for UUID update:", elapsedTime)
+
+	reportsDir := filepath.Join(".", "reports", "uuidbenchmark")
+
+	err = os.MkdirAll(reportsDir, os.ModePerm)
+
+	if err != nil {
+		panic(err)
+	}
+
+	f, err := os.Create(filepath.Join(reportsDir, fmt.Sprintf("results_%d_%d.csv", numIds, time.Now().Unix())))
+	if err != nil {
+		panic(err)
+	}
+
+	defer f.Close()
+
+	_, err = f.WriteString("Operation,ElapsedTime\n")
+	if err != nil {
+		panic(err)
+	}
+
+	for k, v := range uuidBenchmarkResults {
+		_, err = f.WriteString(fmt.Sprintf("%s,%s\n", k, v.String()))
+		if err != nil {
+			panic(err)
+		}
+	}
 
 	yellow.Print("--------------------------------------------------------------------")
 	fmt.Println()

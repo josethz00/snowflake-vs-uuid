@@ -152,7 +152,7 @@ func main() {
 	snowflakeBenchmarkResults["Update"] = elapsedTime
 	boldCyan.Println("Elapsed time for Snowflake ID single record update:", elapsedTime)
 
-	reportsDir := filepath.Join(".", "reports", "snowflake")
+	reportsDir := filepath.Join(".", "reports", "snowflakebenchmark")
 
 	err = os.MkdirAll(reportsDir, os.ModePerm)
 
