@@ -13,7 +13,7 @@ import (
 )
 
 func main() {
-	rand.Seed(time.Now().Unix())
+	rand.Seed(42) // fixed seed to reduce variability
 	boldPurple := color.New(color.FgHiMagenta, color.Bold)
 	yellow := color.New(color.FgHiYellow)
 	boldPurple.Println("BENCHMARK: Snowflake vs UUID")
