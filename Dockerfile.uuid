@@ -12,6 +12,10 @@ RUN chmod +x uuidbenchmark.out
 
 # Create a non-root user and switch to it
 RUN useradd -m myuser
+
+RUN mkdir -p /app/reports/uuidbenchmark && \
+    chown -R myuser:myuser /app /app/reports /app/reports/uuidbenchmark
+
 USER myuser
 
 # Start a shell to keep the container running, instead of executing the benchmark immediately
