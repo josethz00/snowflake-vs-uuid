@@ -1,4 +1,4 @@
-version: '3'
+version: '3.8'
 
 services:
   db:
@@ -13,8 +13,27 @@ services:
       POSTGRES_DB: postgres-benchmark
     volumes:
       - ./initdb.sql:/docker-entrypoint-initdb.d/scripts.sql
+    networks:
+      - custom_network
+
+  uuid_benchmark:
+    build:
+      context: .
+      dockerfile: Dockerfile.uuid
+    container_name: uuid-benchmark
+    depends_on:
+      - db
+    networks:
+      - custom_network
+    # Override the default CMD to keep the container running
+    command: tail -f /dev/null
+    # CPU and Memory limits
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+
 networks:
-  user-network:
+  custom_network:
     driver: bridge
-  proxynet:
-    name: custom_network
