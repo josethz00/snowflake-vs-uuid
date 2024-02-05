@@ -4,11 +4,15 @@ WORKDIR /app
 
 COPY . .
 
-COPY uuidbenchmark /app/
-
 RUN go mod download
 
-RUN go build -o uuidbenchmark main.go
+RUN go build -o uuidbenchmark.out ./uuidbenchmark/main.go
+
+RUN chmod +x uuidbenchmark.out
+
+# Create a non-root user and switch to it
+RUN useradd -m myuser
+USER myuser
 
 # Start a shell to keep the container running, instead of executing the benchmark immediately
 CMD [ "sh" ]
