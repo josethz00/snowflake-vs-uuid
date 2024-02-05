@@ -14,3 +14,10 @@ for i in $(seq 1 $RUNS); do
 done
 
 echo "Benchmark completed."
+
+# create dir if not exists
+mkdir -p reports/uuidbenchmark
+
+docker cp uuid-benchmark:/app/reports/uuidbenchmark/  reports/uuidbenchmark
+mv reports/uuidbenchmark/uuidbenchmark/* ./reports/uuidbenchmark
+rm -r reports/uuidbenchmark/uuidbenchmark

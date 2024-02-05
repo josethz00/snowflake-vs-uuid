@@ -14,3 +14,10 @@ for i in $(seq 1 $RUNS); do
 done
 
 echo "Benchmark completed."
+
+# create dir if not exists
+mkdir -p reports/snowflakebenchmark
+
+docker cp snowflake-benchmark:/app/reports/snowflakebenchmark/  reports/snowflakebenchmark
+mv reports/snowflakebenchmark/snowflakebenchmark/* ./reports/snowflakebenchmark
+rm -r reports/snowflakebenchmark/snowflakebenchmark
