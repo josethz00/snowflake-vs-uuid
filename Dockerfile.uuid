@@ -1,0 +1,12 @@
+FROM golang:latest
+
+WORKDIR /app
+
+COPY . .
+
+RUN go mod download
+
+RUN go build -o uuidbenchmark .
+
+# Start a shell to keep the container running
+CMD [ "sh" ]
