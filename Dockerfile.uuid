@@ -6,7 +6,7 @@ COPY . .
 
 RUN go mod download
 
-RUN go build -o uuidbenchmark .
+RUN go build -o uuidbenchmark uuidbenchmark.go
 
-# Start a shell to keep the container running
+# Start a shell to keep the container running, instead of executing the benchmark immediately
 CMD [ "sh" ]
