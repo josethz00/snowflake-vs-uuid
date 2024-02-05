@@ -30,7 +30,7 @@ func NewDB() *DB {
 }
 
 func (db *DB) ConnectDB() *DB {
-	dbconn, err := sqlx.Connect("postgres", "user=postgres-benchmark dbname=postgres-benchmark password=postgres-benchmark host=localhost port=5571 sslmode=disable")
+	dbconn, err := sqlx.Connect("postgres", "user=postgres-benchmark dbname=postgres-benchmark password=postgres-benchmark host=db port=5432 sslmode=disable")
 	if err != nil {
 		panic(err)
 	}
