@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Number of runs
-RUNS=10
+RUNS=30
 
 # Number of IDs to generate for each run
 NUM_IDS=200000

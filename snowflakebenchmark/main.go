@@ -20,7 +20,7 @@ func main() {
 	yellow := color.New(color.FgHiYellow)
 	boldPurple.Println("BENCHMARK: Snowflake")
 	db := utils.NewDB().ConnectDB()
-	snowflakeBenchmarkResults := make(map[string]time.Duration)
+	snowflakeBenchmarkResults := make(map[string]float64)
 
 	defer db.TruncateTestsSnowflakeTable()
 
@@ -49,18 +49,6 @@ func main() {
 		panic(err)
 	}
 
-	for i := 0; i < 5000; i++ {
-		utils.GenUUID()
-	}
-	for i := 0; i < 5000; i++ {
-		uuid := utils.GenUUID()
-		db.InsertIntoTestsUUID(uuid, "test")
-	}
-	_, err = db.SelectIdFromTestsUUID()
-	if err != nil {
-		panic(err)
-	}
-
 	yellow.Print("--------------------------------------------------------------------")
 
 	var wg sync.WaitGroup
@@ -83,7 +71,7 @@ func main() {
 
 	wg.Wait()
 	elapsedTime := time.Since(startTime)
-	snowflakeBenchmarkResults["Generation"] = elapsedTime
+	snowflakeBenchmarkResults["Generation"] = elapsedTime.Seconds() * 1000
 	boldCyan.Println("Elapsed time for Snowflakes:", elapsedTime)
 
 	yellow.Print("--------------------------------------------------------------------")
@@ -106,7 +94,7 @@ func main() {
 
 	wg.Wait()
 	elapsedTime = time.Since(startTime)
-	snowflakeBenchmarkResults["Generation + Insertion"] = elapsedTime
+	snowflakeBenchmarkResults["Generation + Insertion"] = elapsedTime.Seconds() * 1000
 	boldCyan.Println("Elapsed time for Snowflakes insertion:", elapsedTime)
 
 	yellow.Print("--------------------------------------------------------------------")
@@ -123,7 +111,7 @@ func main() {
 	}
 
 	elapsedTime = time.Since(startTime)
-	snowflakeBenchmarkResults["Selection"] = elapsedTime
+	snowflakeBenchmarkResults["Selection"] = elapsedTime.Seconds() * 1000
 	boldCyan.Println("Elapsed time for Snowflakes selection:", elapsedTime)
 
 	yellow.Print("--------------------------------------------------------------------")
@@ -142,7 +130,7 @@ func main() {
 	}
 
 	elapsedTime = time.Since(startTime)
-	snowflakeBenchmarkResults["Search"] = elapsedTime
+	snowflakeBenchmarkResults["Search"] = elapsedTime.Seconds() * 1000
 	boldCyan.Println("Elapsed time for Snowflake search:", elapsedTime)
 
 	yellow.Print("--------------------------------------------------------------------")
@@ -159,7 +147,7 @@ func main() {
 	}
 
 	elapsedTime = time.Since(startTime)
-	snowflakeBenchmarkResults["Ordered Selection"] = elapsedTime
+	snowflakeBenchmarkResults["Ordered Selection"] = elapsedTime.Seconds() * 1000
 	boldCyan.Println("Elapsed time for Snowflakes ordered selection:", elapsedTime)
 
 	yellow.Print("--------------------------------------------------------------------")
@@ -176,7 +164,7 @@ func main() {
 	}
 
 	elapsedTime = time.Since(startTime)
-	snowflakeBenchmarkResults["Update"] = elapsedTime
+	snowflakeBenchmarkResults["Update"] = elapsedTime.Seconds() * 1000
 	boldCyan.Println("Elapsed time for Snowflake ID single record update:", elapsedTime)
 
 	reportsDir := filepath.Join(".", "reports", "snowflakebenchmark")
@@ -200,7 +188,7 @@ func main() {
 	}
 
 	for k, v := range snowflakeBenchmarkResults {
-		_, err = f.WriteString(fmt.Sprintf("%s,%s\n", k, v.String()))
+		_, err = f.WriteString(fmt.Sprintf("%s,%f\n", k, v))
 		if err != nil {
 			panic(err)
 		}

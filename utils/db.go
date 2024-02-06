@@ -133,7 +133,8 @@ func (db *DB) OrderedSelectIdFromTestsSnowflake() ([]int64, error) {
 func (db *DB) OrderedSelectIdFromTestsUUID() ([]string, error) {
 	results := []string{}
 
-	err := db.Select(&results, "SELECT id FROM tests_uuid ORDER BY id ASC")
+	// order by created_at as UUIDs can't be ordered by themselves (purely random strings)
+	err := db.Select(&results, "SELECT id FROM tests_uuid ORDER BY created_at ASC")
 
 	if err != nil {
 		return nil, err
