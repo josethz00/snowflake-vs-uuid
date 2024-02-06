@@ -19,7 +19,7 @@ func main() {
 	yellow := color.New(color.FgHiYellow)
 	boldPurple.Println("BENCHMARK: UUID")
 	db := utils.NewDB().ConnectDB()
-	uuidBenchmarkResults := make(map[string]time.Duration)
+	uuidBenchmarkResults := make(map[string]float64)
 
 	defer db.TruncateTestsUUIDTable()
 
@@ -71,7 +71,7 @@ func main() {
 
 	wg.Wait()
 	elapsedTime := time.Since(startTime)
-	uuidBenchmarkResults["Generation"] = elapsedTime
+	uuidBenchmarkResults["Generation"] = elapsedTime.Seconds() * 1000
 	boldCyan.Println("Elapsed time for UUIDs:", elapsedTime)
 
 	yellow.Print("--------------------------------------------------------------------")
@@ -94,7 +94,7 @@ func main() {
 
 	wg.Wait()
 	elapsedTime = time.Since(startTime)
-	uuidBenchmarkResults["Generation + Insertion"] = elapsedTime
+	uuidBenchmarkResults["Generation + Insertion"] = elapsedTime.Seconds() * 1000
 	boldCyan.Println("Elapsed time for UUIDs insertion:", elapsedTime)
 
 	yellow.Print("--------------------------------------------------------------------")
@@ -111,7 +111,7 @@ func main() {
 	}
 
 	elapsedTime = time.Since(startTime)
-	uuidBenchmarkResults["Selection"] = elapsedTime
+	uuidBenchmarkResults["Selection"] = elapsedTime.Seconds() * 1000
 	boldCyan.Println("Elapsed time for UUIDs selection:", elapsedTime)
 
 	yellow.Print("--------------------------------------------------------------------")
@@ -129,7 +129,7 @@ func main() {
 	}
 
 	elapsedTime = time.Since(startTime)
-	uuidBenchmarkResults["Search"] = elapsedTime
+	uuidBenchmarkResults["Search"] = elapsedTime.Seconds() * 1000
 	boldCyan.Println("Elapsed time for UUID search:", elapsedTime)
 
 	yellow.Print("--------------------------------------------------------------------")
@@ -146,7 +146,7 @@ func main() {
 	}
 
 	elapsedTime = time.Since(startTime)
-	uuidBenchmarkResults["Ordered Selection"] = elapsedTime
+	uuidBenchmarkResults["Ordered Selection"] = elapsedTime.Seconds() * 1000
 	boldCyan.Println("Elapsed time for UUIDs ordered selection:", elapsedTime)
 
 	yellow.Print("--------------------------------------------------------------------")
@@ -163,7 +163,7 @@ func main() {
 	}
 
 	elapsedTime = time.Since(startTime)
-	uuidBenchmarkResults["Update"] = elapsedTime
+	uuidBenchmarkResults["Update"] = elapsedTime.Seconds() * 1000
 	boldCyan.Println("Elapsed time for UUID update:", elapsedTime)
 
 	reportsDir := filepath.Join(".", "reports", "uuidbenchmark")
@@ -187,7 +187,7 @@ func main() {
 	}
 
 	for k, v := range uuidBenchmarkResults {
-		_, err = f.WriteString(fmt.Sprintf("%s,%s\n", k, v.String()))
+		_, err = f.WriteString(fmt.Sprintf("%s,%s\n", k, v))
 		if err != nil {
 			panic(err)
 		}
