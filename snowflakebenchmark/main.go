@@ -36,6 +36,33 @@ func main() {
 
 	boldCyan := color.New(color.FgHiCyan, color.Bold)
 
+	boldCyan.Print("Warming up ... \n")
+	for i := 0; i < 5000; i++ {
+		utils.GenSnowflake(snowflakeNode)
+	}
+	for i := 0; i < 5000; i++ {
+		snowfid := utils.GenSnowflake(snowflakeNode)
+		db.InsertIntoTestsSnowflake(snowfid, "test")
+	}
+	_, err = db.SelectIdFromTestsSnowflake()
+	if err != nil {
+		panic(err)
+	}
+
+	for i := 0; i < 5000; i++ {
+		utils.GenUUID()
+	}
+	for i := 0; i < 5000; i++ {
+		uuid := utils.GenUUID()
+		db.InsertIntoTestsUUID(uuid, "test")
+	}
+	_, err = db.SelectIdFromTestsUUID()
+	if err != nil {
+		panic(err)
+	}
+
+	yellow.Print("--------------------------------------------------------------------")
+
 	var wg sync.WaitGroup
 	numGoroutines := runtime.GOMAXPROCS(0) // Limit the number of goroutines to the number of CPU cores
 	// by passing 0 to GOMAXPROCS we get the number of cores available and doesn't limit
