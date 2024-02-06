@@ -4,7 +4,7 @@
 RUNS=10
 
 # Number of IDs to generate for each run
-NUM_IDS=100000
+NUM_IDS=200000
 
 echo "Running benchmark $RUNS times with $NUM_IDS IDs each..."
 
