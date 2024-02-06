@@ -187,7 +187,7 @@ func main() {
 	}
 
 	for k, v := range uuidBenchmarkResults {
-		_, err = f.WriteString(fmt.Sprintf("%s,%s\n", k, v))
+		_, err = f.WriteString(fmt.Sprintf("%s,%f\n", k, v))
 		if err != nil {
 			panic(err)
 		}

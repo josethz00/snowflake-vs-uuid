@@ -1,6 +1,5 @@
 import pandas as pd
 import os
-import re
 import numpy as np
 from scipy import stats
 
