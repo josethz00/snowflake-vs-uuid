@@ -18,6 +18,9 @@ echo "Benchmark completed."
 # create dir if not exists
 mkdir -p reports/uuidbenchmark
 
+# remove old reports
+rm -rf reports/uuidbenchmark/*
+
 docker cp uuid-benchmark:/app/reports/uuidbenchmark/  reports/uuidbenchmark
 mv reports/uuidbenchmark/uuidbenchmark/* ./reports/uuidbenchmark
 rm -r reports/uuidbenchmark/uuidbenchmark

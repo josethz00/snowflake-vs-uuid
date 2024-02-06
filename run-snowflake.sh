@@ -18,6 +18,9 @@ echo "Benchmark completed."
 # create dir if not exists
 mkdir -p reports/snowflakebenchmark
 
+# remove old reports
+rm -rf reports/snowflakebenchmark/*
+
 docker cp snowflake-benchmark:/app/reports/snowflakebenchmark/  reports/snowflakebenchmark
 mv reports/snowflakebenchmark/snowflakebenchmark/* ./reports/snowflakebenchmark
 rm -r reports/snowflakebenchmark/snowflakebenchmark
