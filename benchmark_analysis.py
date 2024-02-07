@@ -157,8 +157,8 @@ plt.legend(loc='upper right')
 
 plt.grid(True)
 
-
-plt.savefig("ordered_selection_improved.png", dpi=300)
+os.makedirs('images', exist_ok=True)
+plt.savefig(os.path.join('images', "ordered_selection_improved.png"), dpi=300)
 plt.show()
 
 
@@ -175,7 +175,7 @@ plt.legend(loc='upper right')
 plt.grid(True)
 
 
-plt.savefig("selection_improved.png", dpi=300)
+plt.savefig(os.path.join('images',"selection.png"), dpi=300)
 plt.show()
 
 
@@ -192,7 +192,7 @@ plt.legend(loc='upper right')
 plt.grid(True)
 
 
-plt.savefig("update_improved.png", dpi=300)
+plt.savefig(os.path.join('images',"update.png"), dpi=300)
 plt.show()
 
 
@@ -209,7 +209,7 @@ plt.legend(loc='upper right')
 plt.grid(True)
 
 
-plt.savefig("search_improved.png", dpi=300)
+plt.savefig(os.path.join('images', "search.png"), dpi=300)
 plt.show()
 
 
@@ -226,7 +226,7 @@ plt.legend(loc='upper right')
 plt.grid(True)
 
 
-plt.savefig("idgeneration_improved.png", dpi=300)
+plt.savefig(os.path.join('images',"idgeneration.png"), dpi=300)
 plt.show()
 
 
@@ -243,7 +243,7 @@ plt.legend(loc='upper right')
 plt.grid(True)
 
 
-plt.savefig("insertion_improved.png", dpi=300)
+plt.savefig(os.path.join('images', "insertion.png"), dpi=300)
 plt.show()
 
 
@@ -291,6 +291,6 @@ for i, (cmd, times) in enumerate(commands_means.items()):
     ax.grid(True, linestyle='--', linewidth=0.5, alpha=0.7)
 
 fig.tight_layout()
-plt.savefig('benchmark_comparison.png', dpi=300, bbox_inches='tight')
+plt.savefig(os.path.join('images', 'benchmark_comparison.png'), dpi=300, bbox_inches='tight')
 
 plt.show()
