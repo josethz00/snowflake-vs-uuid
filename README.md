@@ -3,7 +3,7 @@
 This is a simple benchmark to compare the performance of Snowflake and UUID.
 It was built with Go + SQLx + PostgreSQL. The data collected was used to generate the graphs below.
 
-<img src="https://github.com/josethz00/snowflake-vs-uuid/blob/main/plotres.png?raw=True" />
+<img src="https://github.com/josethz00/snowflake-vs-uuid/blob/main/images/benchmark_comparison.png?raw=True" />
 
 ## How to run
 

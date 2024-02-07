@@ -287,7 +287,6 @@ for i, (cmd, times) in enumerate(commands_means.items()):
     ax.set_xlabel('Time (s)', fontsize=14)
 
     ax.tick_params(axis='both', which='major', labelsize=12)
-
     ax.grid(True, linestyle='--', linewidth=0.5, alpha=0.7)
 
 fig.tight_layout()
