@@ -285,7 +285,7 @@ for i, (cmd, times) in enumerate(commands_means.items()):
     x_max = max(times) * 1.2
     ax.set_xlim(0, x_max)
 
-    bars = ax.barh(['UUID', 'Snowflake'], times, color=[color_palette(0), color_palette(1)], height=0.5)
+    bars = ax.barh(['Snowflake', 'UUID'], times, color=[color_palette(1), color_palette(0)], height=0.5)
 
     for bar in bars:
         width = bar.get_width()
@@ -294,7 +294,7 @@ for i, (cmd, times) in enumerate(commands_means.items()):
                 va='center', ha='left', color='black', fontsize=10, fontweight='bold')
 
     ax.set_yticks([1, 0])
-    ax.set_yticklabels(['UUID', 'Snowflake'])
+    ax.set_yticklabels(['Snowflake', 'UUID'])
 
     ax.set_title(cmd, fontsize=16, fontweight='bold')
     ax.set_xlabel('Time (s)', fontsize=14)
