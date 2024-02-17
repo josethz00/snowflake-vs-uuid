@@ -3,7 +3,7 @@
 This is a simple benchmark to compare the performance of Snowflake and UUID.
 It was built with Go + Docker + SQLx + PostgreSQL. The data collected was used to generate the graphs below.
 
-The graphs and the data analysis were made with Python3, so please check if you have it installed in your machine.
+The graphs and the data analysis were made with Python3, so please check if you have it installed on your machine.
 
 <img src="https://github.com/josethz00/snowflake-vs-uuid/blob/main/images/benchmark_comparison.png?raw=True" />
 
@@ -71,3 +71,11 @@ this will generate the graphs and print the data analysis. The generated graphs 
 The results were validated by running the benchmarks multiple times (30), calculating the average and the standard deviation, and running a t-test to compare the means of the two groups. The t-test was performed with a 95% confidence level.
 
 <img src="https://github.com/josethz00/snowflake-vs-uuid/blob/main/images/statistical_significance.png?raw=True" />
+
+## Hardware Used for the benchmark
+
+- DELL Inspiron 5
+  - Intel 7 11th Gen
+  - 16 GB RAM DDR4
+  - 512 GB SSD
+  - 2GB dedicated GPU
