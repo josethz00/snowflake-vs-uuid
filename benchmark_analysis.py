@@ -4,7 +4,14 @@ import os
 import numpy as np
 from scipy import stats
 from matplotlib import pyplot as plt
-import matplotlib.ticker as mticker
+
+
+def format_p_value(p):
+    if p < 0.01:
+        exponent = np.floor(np.log10(p)).astype(int)
+        return f'$1x10^{{{exponent}}}$'  # Using LaTeX-style formatting
+    else:
+        return f'{p:.4f}'
 
 def read_csv_report_files_by_operation(operation: str, benchmark: Literal["snowflake", "uuid"] = "snowflake", dir: Optional[str] = None) -> list:
     if not dir:
@@ -36,7 +43,8 @@ print(f"Standard deviation: {np.std(uuid_ordered_selection_times_ms)}")
 print(f"Variance: {np.var(uuid_ordered_selection_times_ms)}")
 
 print("T-TEST - ORDERED SELECTION")
-print(stats.ttest_ind(snowflake_ordered_selection_times_ms, uuid_ordered_selection_times_ms, equal_var=False))
+ordered_selection_significance = stats.ttest_ind(snowflake_ordered_selection_times_ms, uuid_ordered_selection_times_ms, equal_var=False)
+print(ordered_selection_significance)
 print("\n =================================== \n")
 
 
@@ -57,7 +65,8 @@ print(f"Standard deviation: {np.std(uuid_generation_times_ms)}")
 print(f"Variance: {np.var(uuid_generation_times_ms)}")
 
 print("T-TEST - ID GENERATION")
-print(stats.ttest_ind(snowflake_generation_times_ms, uuid_generation_times_ms, equal_var=False))
+generation_significance = stats.ttest_ind(snowflake_generation_times_ms, uuid_generation_times_ms, equal_var=False)
+print(generation_significance)
 print("\n =================================== \n")
 
 
@@ -78,7 +87,8 @@ print(f"Standard deviation: {np.std(uuid_insertion_times_ms)}")
 print(f"Variance: {np.var(uuid_insertion_times_ms)}")
 
 print("T-TEST - INSERTION")
-print(stats.ttest_ind(snowflake_insertion_times_ms, uuid_insertion_times_ms, equal_var=False))
+insertion_significance = stats.ttest_ind(snowflake_insertion_times_ms, uuid_insertion_times_ms, equal_var=False)
+print(insertion_significance)
 print("\n =================================== \n")
 
 
@@ -99,7 +109,8 @@ print(f"Standard deviation: {np.std(uuid_selection_times_ms)}")
 print(f"Variance: {np.var(uuid_selection_times_ms)}")
 
 print("T-TEST - SELECTION")
-print(stats.ttest_ind(snowflake_selection_times_ms, uuid_selection_times_ms, equal_var=False))
+selection_significance = stats.ttest_ind(snowflake_selection_times_ms, uuid_selection_times_ms, equal_var=False)
+print(selection_significance)
 print("\n =================================== \n")
 
 
@@ -120,7 +131,8 @@ print(f"Standard deviation: {np.std(uuid_update_times_ms)}")
 print(f"Variance: {np.var(uuid_update_times_ms)}")
 
 print("T-TEST - UPDATE")
-print(stats.ttest_ind(snowflake_update_times_ms, uuid_update_times_ms, equal_var=False))
+update_significance = stats.ttest_ind(snowflake_update_times_ms, uuid_update_times_ms, equal_var=False)
+print(update_significance)
 print("\n =================================== \n")
 
 
@@ -141,7 +153,8 @@ print(f"Standard deviation: {np.std(uuid_search_by_id_times_ms)}")
 print(f"Variance: {np.var(uuid_search_by_id_times_ms)}")
 
 print("T-TEST - SEARCH BY ID")
-print(stats.ttest_ind(snowflake_search_by_id_times_ms, uuid_search_by_id_times_ms, equal_var=False))
+search_by_id_significance = stats.ttest_ind(snowflake_search_by_id_times_ms, uuid_search_by_id_times_ms, equal_var=False)
+print(search_by_id_significance)
 print("\n =================================== \n")
 
 
@@ -292,4 +305,42 @@ for i, (cmd, times) in enumerate(commands_means.items()):
 fig.tight_layout()
 plt.savefig(os.path.join('images', 'benchmark_comparison.png'), dpi=300, bbox_inches='tight')
 
+plt.show()
+
+
+p_values = {
+    'Ordered Selection': ordered_selection_significance.pvalue,
+    'ID Generation': generation_significance.pvalue,
+    'Insertion': insertion_significance.pvalue,
+    'Selection': selection_significance.pvalue,
+    'Update': update_significance.pvalue,
+    'Search by ID': search_by_id_significance.pvalue
+}
+
+operations = list(p_values.keys())
+neg_log_p_values = [-np.log10(p) for p in p_values.values()]
+
+fig, ax = plt.subplots(figsize=(10, 6))
+
+# Creating the bar plot
+bars = ax.bar(operations, neg_log_p_values, color='skyblue')
+
+# Adding a line to denote the typical alpha level of 0.05
+threshold = -np.log10(0.05)
+ax.axhline(y=threshold, color='red', linestyle='--', label='Significance threshold (p=0.05)')
+
+ax.set_ylabel('-log10(p-value)')
+ax.set_title('Statistical Significance of Operations Performance Comparison')
+ax.legend()
+
+# Annotate bars with p-value
+for bar, p_value in zip(bars, p_values.values()):
+    ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height(), f'p={format_p_value(p_value)}',
+            ha='center', va='bottom')
+
+plt.xticks(rotation=45, ha="right")
+plt.tight_layout()
+
+
+plt.savefig(os.path.join('images', 'statistical_significance.png'), dpi=300, bbox_inches='tight')
 plt.show()
